@@ -20,8 +20,8 @@ with open(json_path, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 # カードの情報
-base_card = data["base_card"]
-result_card = data["result_card"]
+#base_card = data["base_card"]
+#result_card = data["result_card"]
 
 st.write("次のカードは大きい？ 小さい？")
 
