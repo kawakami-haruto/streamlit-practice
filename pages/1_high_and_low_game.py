@@ -2,10 +2,16 @@ import streamlit as st
 import json
 from pathlib import Path
 
-from models.highlow import judge
+from models.highlow import draw_cards, judge
 
 # タイトル
 st.title("High & Low Game")
+
+if "base_card" not in st.session_state:
+    st.session_state.base_card, st.session_state.result_card = draw_cards()
+
+base_card = st.session_state.base_card
+result_card = st.session_state.result_card
 
 # JSONファイルを読み込む
 json_path = Path(__file__).parent.parent / "sample_data" / "highlow.json"
