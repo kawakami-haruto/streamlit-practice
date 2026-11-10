@@ -1,0 +1,8 @@
+site_name:Haruto's app
+site_url: https://kawakami-haruto.github.io/streamlit-practice/
+theme:
+  name:mkdocs
+nav:
+  - Home: index.md
+  - About: about.md
+repo_url: https://github.com/kawakami-haruto/streamlit-practice
