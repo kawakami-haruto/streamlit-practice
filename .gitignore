@@ -221,3 +221,5 @@ __marimo__/
 
 # VS Code Settings
 .vscode
+# mkdocs documentation
+/site
