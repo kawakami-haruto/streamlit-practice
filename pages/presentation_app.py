@@ -33,6 +33,8 @@ if st.session_state.game_over:
     if st.session_state.celebrated:
         st.balloons()
         st.success("5回連続でバーストしませんでした！おめでとうございます！")
+    elif st.session_state.balance <= 0:
+        st.error("所持金がなくなったため、ゲーム終了です。")
     else:
         st.error("バーストしたため、ゲーム終了です。")
     st.metric("最終残高", f"{st.session_state.balance}円")
@@ -44,9 +46,15 @@ if st.session_state.game_over:
 if "round_state" not in st.session_state:
     st.subheader(f"ラウンド {st.session_state.round_number + 1} / {MAX_ROUNDS}")
     st.metric("残高", f"{st.session_state.balance}円")
-    bet = st.number_input("掛け金（1〜100円）", min_value=1, max_value=100, value=10, step=1)
+    bet = st.number_input(
+        "掛け金（1円〜所持金全額）",
+        min_value=1,
+        max_value=st.session_state.balance,
+        value=min(10, st.session_state.balance),
+        step=1,
+    )
     if st.button("ゲーム開始", type="primary"):
-        st.session_state.round_state = start_round(int(bet))
+        st.session_state.round_state = start_round(int(bet), st.session_state.balance)
         st.rerun()
     st.stop()
 
@@ -93,13 +101,15 @@ else:
         elif round_state.result == "lose":
             st.session_state.balance -= round_state.bet
         round_state.settled = True
+        if st.session_state.balance <= 0:
+            st.session_state.game_over = True
 
     if round_state.result != "bust":
         st.write(f"このラウンド後の残高: {st.session_state.balance}円")
-        if st.session_state.round_number + 1 >= MAX_ROUNDS:
+        if st.session_state.round_number + 1 >= MAX_ROUNDS and st.session_state.balance > 0:
             st.session_state.game_over = True
             st.session_state.celebrated = True
-        elif st.button("次のゲームへ", type="primary"):
+        elif not st.session_state.game_over and st.button("次のゲームへ", type="primary"):
             st.session_state.round_number += 1
             st.session_state.pop("round_state")
             st.rerun()

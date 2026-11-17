@@ -46,10 +46,12 @@ def is_bust(hand: list[Card]) -> bool:
     return hand_value(hand) > 21
 
 
-def start_round(bet: int) -> Round:
+def start_round(bet: int, balance: int) -> Round:
     """Deal two cards to the player and dealer."""
-    if not 1 <= bet <= 100:
-        raise ValueError("掛け金は1〜100円で指定してください。")
+    if balance < 1:
+        raise ValueError("所持金がないため、ゲームを開始できません。")
+    if not 1 <= bet <= balance:
+        raise ValueError("掛け金は1円から所持金全額の範囲で指定してください。")
 
     deck = create_deck()
     random.shuffle(deck)
